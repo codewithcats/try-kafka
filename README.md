@@ -43,3 +43,17 @@ Create a Kafka topic that will contain error events, and verify it exists.
 ```
 docker-compose exec broker0 /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic error --config retention.ms=259200
 ```
+
+### Build a Basic Microservice and Kafka Event Publisher
+
+Send message using order service
+
+```
+docker-compose up -d --build order
+```
+
+Verify it was received by using the appropriate Kafka command-line operation
+
+```
+docker-compose exec broker0 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --topic order_received --from-beginning --bootstrap-server localhost:9092
+```
