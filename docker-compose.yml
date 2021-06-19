@@ -65,6 +65,8 @@ services:
 
   order:
     build: ./order
+    ports:
+      - "8008:80"
     networks:
       - order_network
 
