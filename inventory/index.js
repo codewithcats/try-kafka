@@ -6,15 +6,29 @@ const kafka = new Kafka({
 });
 
 const consumer = kafka.consumer({ groupId: "order-consumer" });
+const producer = kafka.producer();
 
 const run = async () => {
-  await consumer.connect();
+  await Promise.all([consumer.connect(), producer.connect()]);
   console.log("✅ Kafka connected");
   await consumer.subscribe({ topic: "order_received", fromBeginning: false });
 
   await consumer.run({
     eachMessage: async ({ message }) => {
-      console.log("Received", message.value.toString());
+      const order = JSON.parse(message.value.toString());
+      console.log("Received", order);
+
+      await producer.send({
+        topic: "order_confirmed",
+        messages: [
+          {
+            value: JSON.stringify({
+              order,
+            }),
+          },
+        ],
+      });
+      console.log("✉️ Kafka:order_confirm message sent");
     },
   });
 };
