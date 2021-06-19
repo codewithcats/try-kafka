@@ -67,3 +67,20 @@ docker-compose exec broker0 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --t
 - **Fastify** with `async/await` needs us to explicitly `return`.
 - When start Fastify in container we need to explicitly add "0.0.0.0" as a second
   parameter of funciton `listen`.
+
+### Build an Inventory Consumer That Handles Order Received Events
+
+Treat received events in an idempotent manner, meaning any duplicates that are received must not create any side effects within the system.
+
+```
+# Add Kafka config to broker service
+- KAFKA_CFG_ENABLE_IDEMPOTENCE=true
+```
+
+Create a long-lived subscription to the OrderReceived topic in Kafka.
+
+##### Learned
+
+- Message will come as `Buffer`, we can use `toString()` function to convert it to string.
+- Consumer's `groupId` is required when create a consumer.
+- It takes few seconds for consumer to join the consumer group.
