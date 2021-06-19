@@ -60,7 +60,10 @@ docker-compose exec broker0 /opt/bitnami/kafka/bin/kafka-console-consumer.sh --t
 
 ##### Learned
 
-- message `value` must be string -- use `JSON.stringify`
+- message `value` must be string -- use `JSON.stringify`.
 - cannot let docker compose recreate broker containers, the IDs will be changed and
   we will get `No leader` message. If we need to change container configuration, we
   need to remove the container first (`docker compose rm` or `down`).
+- **Fastify** with `async/await` needs us to explicitly `return`.
+- When start Fastify in container we need to explicitly add "0.0.0.0" as a second
+  parameter of funciton `listen`.
