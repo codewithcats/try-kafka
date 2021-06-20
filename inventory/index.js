@@ -18,17 +18,32 @@ const run = async () => {
       const order = JSON.parse(message.value.toString());
       console.log("Received", order);
 
-      await producer.send({
-        topic: "order_confirmed",
-        messages: [
-          {
-            value: JSON.stringify({
-              order,
-            }),
-          },
-        ],
-      });
-      console.log("✉️ Kafka:order_confirm message sent");
+      if (!order.order_id) {
+        await producer.send({
+          topic: "error",
+          messages: [
+            {
+              value: JSON.stringify({
+                order,
+                error: "Invalid order: ID not found",
+              }),
+            },
+          ],
+        });
+        console.log("❎ Kafka: error message sent");
+      } else {
+        await producer.send({
+          topic: "order_confirmed",
+          messages: [
+            {
+              value: JSON.stringify({
+                order,
+              }),
+            },
+          ],
+        });
+        console.log("✉️ Kafka:order_confirm message sent");
+      }
     },
   });
 };

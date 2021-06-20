@@ -79,8 +79,18 @@ Treat received events in an idempotent manner, meaning any duplicates that are r
 
 Create a long-lived subscription to the OrderReceived topic in Kafka.
 
+Create functionality that publishes an error event containing the received `OrderReceived` event to the `DeadLetterQueue` topic in Kafka when the event can’t be processed successfully.
+
 ##### Learned
 
 - Message will come as `Buffer`, we can use `toString()` function to convert it to string.
 - Consumer's `groupId` is required when create a consumer.
 - It takes few seconds for consumer to join the consumer group.
+- To list all brokers
+
+```
+docker compose exec zookeeper /opt/bitnami/zookeeper/bin/zkCli.sh
+
+# inside zk shell
+ls /brokers/ids
+```
